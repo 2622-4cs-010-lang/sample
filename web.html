@@ -3,9 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Lost & Found</title>
+    <link rel="stylesheet" href="web.css">
 </head>
+
 <body>
-    
+
+    <!-- HOME / LOGIN PAGE -->
+    <div id="homePage" class="page">
+        <div class="login-container">
+            <h1>Lost & Found</h1>
+            <p class="subtitle">Find what you've lost or help someone find theirs.</p>
+
+            <input type="text" id="username" placeholder="Username">
+
+            <input type="password" id="password" placeholder="Password">
+
+            <div class="main-buttons">
+                <button onclick="openPage('lostPage')">Lost Item</button>
+                <button onclick="openPage('foundPage')">Found Item</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- LOST ITEMS PAGE -->
+    <div id="lostPage" class="page hidden">
+
+        <header>
+            <h1>Lost Items</h1>
+
+            <button class="add-post" onclick="showPostForm('lost')">
+                + Add Post
+            </button>
+        </header>
+
+        <div class="content">
+            <h2>Lost Items</h2>
+            <p>Here you can see items that people have lost.</p>
+
+            <div id="lostPosts" class="posts-container">
+                <!-- Lost posts will appear here -->
+            </div>
+        </div>
+
+        <button class="back-button" onclick="goHome()">← Back</button>
+    </div>
+
+
+    <!-- FOUND ITEMS PAGE -->
+    <div id="foundPage" class="page hidden">
+
+        <header>
+            <h1>Found Items</h1>
+
+            <button class="add-post" onclick="showPostForm('found')">
+                + Add Post
+            </button>
+        </header>
+
+        <div class="content">
+            <h2>Found Items</h2>
+            <p>Here you can see items that people have found.</p>
+
+            <div id="foundPosts" class="posts-container">
+                <!-- Found posts will appear here -->
+            </div>
+        </div>
+
+        <button class="back-button" onclick="goHome()">← Back</button>
+    </div>
+
+
+    <!-- ADD POST FORM -->
+    <div id="postForm" class="modal hidden">
+
+        <div class="form-box">
+
+            <button class="close-button" onclick="closePostForm()">×</button>
+
+            <h2 id="formTitle">Add Post</h2>
+
+            <input
+                type="text"
+                id="itemName"
+                placeholder="Item name"
+            >
+
+            <input
+                type="text"
+                id="itemLocation"
+                placeholder="Location"
+            >
+
+            <textarea
+                id="itemDescription"
+                placeholder="Description"
+            ></textarea>
+
+            <button class="submit-button" onclick="addPost()">
+                Post Item
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let currentPostType = "";
+
+        // Open Lost or Found page
+        function openPage(pageId) {
+
+            document.querySelectorAll(".page").forEach(function(page) {
+                page.classList.add("hidden");
+            });
+
+            document.getElementById(pageId).classList.remove("hidden");
+        }
+
+
+        // Go back to home page
+        function goHome() {
+
+            document.querySelectorAll(".page").forEach(function(page) {
+                page.classList.add("hidden");
+            });
+
+            document.getElementById("homePage").classList.remove("hidden");
+        }
+
+
+        // Show Add Post form
+        function showPostForm(type) {
+
+            currentPostType = type;
+
+            document.getElementById("postForm").classList.remove("hidden");
+
+            if (type === "lost") {
+                document.getElementById("formTitle").innerText = "Add Lost Item";
+            } else {
+                document.getElementById("formTitle").innerText = "Add Found Item";
+            }
+        }
+
+
+        // Close Add Post form
+        function closePostForm() {
+
+            document.getElementById("postForm").classList.add("hidden");
+
+            document.getElementById("itemName").value = "";
+            document.getElementById("itemLocation").value = "";
+            document.getElementById("itemDescription").value = "";
+        }
+
+
+        // Add a post
+        function addPost() {
+
+            const name = document.getElementById("itemName").value;
+            const location = document.getElementById("itemLocation").value;
+            const description = document.getElementById("itemDescription").value;
+
+            if (name === "" || location === "" || description === "") {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const post = document.createElement("div");
+
+            post.className = "post-card";
+
+            post.innerHTML = `
+                <h3>${name}</h3>
+                <p><strong>Location:</strong> ${location}</p>
+                <p>${description}</p>
+            `;
+
+            if (currentPostType === "lost") {
+                document.getElementById("lostPosts").appendChild(post);
+            } else {
+                document.getElementById("foundPosts").appendChild(post);
+            }
+
+            closePostForm();
+        }
+
+    </script>
+
 </body>
 </html>
